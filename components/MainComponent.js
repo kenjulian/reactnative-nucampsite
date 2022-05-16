@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import { ThemeConsumer } from 'react-native-elements';
+//import { ThemeConsumer } from 'react-native-elements';
 import Directory from './DirectoryComponent';
 import CampsiteInfo from './CampsiteInfoComponent';
 import Constants from 'expo-constants';
 import {View, Platform} from 'react-native';
 import {createStackNavigator} from 'react-navigation-stack';
 import { createAppContainer} from 'react-navigation';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
+//import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 
 //import {CAMPSITES} from './shared/campsites';
 
@@ -51,7 +51,7 @@ class Main extends Component {
     // }
 
     render() {
-        return 
+        return ( 
         <View style={{
             flex: 1,
             paddingTop: Platform.OS === 'ios' ? 0 : Constants.statusBarHeight
@@ -66,6 +66,7 @@ class Main extends Component {
             {/* AppNavigator replaces the above: now contains the DirectoryNavigator which in turn contains the different screens */}
             <AppNavigator /> 
         </View>
+        )
     }
 }
 
