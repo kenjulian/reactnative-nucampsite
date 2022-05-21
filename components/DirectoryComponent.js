@@ -1,18 +1,22 @@
 import React, {Component} from 'react';
 import { FlatList } from 'react-native';
-import {ListItem} from 'react-native-elements';
-import {CAMPSITES} from '../shared/campsites';
+import {Tile} from 'react-native-elements';
+//import {CAMPSITES} from '../shared/campsites';
+import {connect} from 'react-redux';
+import {baseUrl} from '../shared/baseUrl';
+
+const mapStateToProps = state => {
+    return {
+        campsites: state.campsites
+
+    };
+};
 
 
 //Directory turned into class component to be able to store state data
 class Directory extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            campsites: CAMPSITES
-        }
-    }
+    
 
     static navigationOptions = {
         title: 'Directory'
@@ -25,18 +29,19 @@ class Directory extends Component {
         const {navigate} = this.props.navigation;
         const renderDirectoryItem = ({item}) => {
             return (
-                <ListItem   
+                <Tile   
                     title={item.name}
-                    subtitle={item.description}
-                    leftAvatar={{source: require('./images/react-lake.jpg')}}
-                    onPress={() => navigate('CampsiteInfo', {campsiteId: item.id})}
+                    caption={item.description}
+                    featured
+                    imageSrc={() => navigate('CampsiteInfo', {campsiteId: item.id})}
+                    onPress={{uri: baseUrl + item.image}}
                 />
             )
         };
         return (
             // flatlist will iterate through every item through its data prop; runs renderItem on every item
             <FlatList
-                data={this.state.campsites}
+                data={this.props.campsites.campsites}
                 renderItem={renderDirectoryItem}
                 keyExtractor={item => item.id.toString()}
             />
@@ -44,4 +49,4 @@ class Directory extends Component {
   }
 }
 
-export default Directory;
+export default connect(mapStateToProps)(Directory);

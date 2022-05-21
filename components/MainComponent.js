@@ -13,6 +13,16 @@ import { createAppContainer} from 'react-navigation';
 //import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import {Icon} from 'react-native-elements';
 import SafeAreaView from 'react-native-safe-area-view';
+import { connect } from 'react-redux';
+import { fetchCampsites, fetchComments, fetchPromotions,
+    fetchPartners } from '../redux/ActionCreators';
+
+const mapDispatchToProps = {
+        fetchCampsites,
+        fetchComments,
+        fetchPromotions,
+        fetchPartners
+    };
 
 //import {CAMPSITES} from './shared/campsites';
 //we are creating a stack navigator to be initialized into createAppContainer
@@ -227,6 +237,13 @@ class Main extends Component {
     //     this.setState({selectedCampsite: campsiteId});
     // }
 
+    componentDidMount() {
+        this.props.fetchCampsites();
+        this.props.fetchComments();
+        this.props.fetchPromotions();
+        this.props.fetchPartners();
+    }
+
     render() {
         return ( 
         <View style={{
@@ -276,4 +293,5 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Main;
+//since theres no mapStateToProps, use null in place
+export default connect(null, mapDispatchToProps)(Main);
