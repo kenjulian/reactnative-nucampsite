@@ -6,7 +6,7 @@ import {Card, Icon, Modal, StyleSheet, Rating, Input} from 'react-native-element
 // import {COMMENTS} from '../shared/comments';
 import {connect} from 'react-redux';
 import {baseUrl} from '../shared/baseUrl';
-import {postFavorite} from '../redux/ActionCreators';
+import {postFavorite, postComment} from '../redux/ActionCreators';
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +17,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-    postFavorite: campsiteId => (postFavorite(campsiteId))
+    postFavorite: campsiteId => (postFavorite(campsiteId)),
+    postComment: (campsiteId, rating, author, text) => (postComment(campsiteId, rating, author, text))
 };
 
 function RenderCampsite(props) {
@@ -72,10 +73,8 @@ function RenderComments({comments}) {
                     style={{fontSize: 12, alignItems: 'flex-start', paddingVertical: '5%'}}
                     startingValue={item.rating}
                     imageSize={10}
-                >
-                    {item.rating} Stars
-                </Rating>
-                <Text style={{fontSize: 12}}>{`--${item.text}, ${item.date}`}</Text>
+                />
+                <Text style={{fontSize: 12}}>{`--${item.author}, ${item.date}`}</Text>
             </View>
         )
     }
@@ -108,7 +107,7 @@ class CampsiteInfo extends Component {
     }
 
     handleComment(campsiteId) {
-        console.log(JSON.stringify(this.state));
+        this.props.postComment(campsiteId, this.state.rating, this.state.author, this.state.text);
         this.toggleModal();
     }
 
@@ -195,7 +194,10 @@ class CampsiteInfo extends Component {
                     
                     <View style={{margin: 10}}>
                         <Button
-                            onPress={() => this.toggleModal()}
+                            onPress={() => {
+                                this.toggleModal();
+                                this.resetForm();
+                            }}
                             color='#808080'
                             title='Cancel'
                         >
