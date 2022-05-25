@@ -177,5 +177,10 @@ export const addComment = comment => ({
     payload: comment //this is the newComment passed in the thunk above
 })
 
+export const deleteFavorite = campsiteId => ({
+    type: ActionTypes.DELETE_FAVORITE,
+    payload: campsiteId
+})
+
 
 
