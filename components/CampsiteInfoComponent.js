@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {Button, Text, View, StyleSheet, ScrollView, FlatList} from 'react-native';
-import {Card, Icon, Modal, Rating, Input} from 'react-native-elements';
+import {Button, Modal, Text, View, StyleSheet, ScrollView, FlatList, Alert, PanResponder, PanResponder} from 'react-native';
+import {Card, Icon, Rating, Input} from 'react-native-elements';
 
 // import {CAMPSITES} from '../shared/campsites';
 // import {COMMENTS} from '../shared/comments';
@@ -25,9 +25,45 @@ const mapDispatchToProps = {
 function RenderCampsite(props) {
 
     const {campsite} = props;
+
+    const recognizeDrag = ({dx}) => (dx < -200) ? true : false;
+
+    const PanResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderEnd: (e, gestureState) => {
+            console.log('pan responder end', gestureState);
+            if (recognize(gestureState)) {
+                Alert.alert(
+                    'Add Favorite',
+                    'Are you sure you wish to add ' + campsite.name + ' to favorite?',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'Cancel',
+                            onPress: () => console.log('Cancel Pressed')
+                            
+                        },
+                        {
+                            text: 'OK',
+                            onPress: () => props.favorite ?
+                            console.log('Already set as a favorite') : props.markFavorite()
+                        }
+                    ],
+                    {cancelable: false}
+                )
+            }
+            return true;
+        }
+    })
+
     if (campsite) {
         return (
-            <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
+            <Animatable.View
+                animation='fadeInDown' 
+                duration={2000} 
+                delay={1000}
+                {...PanResponder.panHandlers}
+                >
                 <Card
                     featuredTitle={campsite.name}
                     image={{uri: baseUrl + campsite.image}}>
