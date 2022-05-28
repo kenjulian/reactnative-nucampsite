@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Modal, Text, View, StyleSheet, ScrollView, FlatList, Alert, PanResponder, PanResponder} from 'react-native';
+import {Button, Modal, Text, View, StyleSheet, ScrollView, FlatList, Alert, PanResponder} from 'react-native';
 import {Card, Icon, Rating, Input} from 'react-native-elements';
 
 // import {CAMPSITES} from '../shared/campsites';
@@ -26,35 +26,41 @@ function RenderCampsite(props) {
 
     const {campsite} = props;
 
+    const view = React.createRef();
+
     const recognizeDrag = ({dx}) => (dx < -200) ? true : false;
 
-    const PanResponder = PanResponder.create({
+    const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
+        onPanResponderGrant: () => {
+            view.current.rubberBand(1000)
+            .then(endState => console.log(endState.finished ? 'finished' : 'canceled'));
+        },
         onPanResponderEnd: (e, gestureState) => {
             console.log('pan responder end', gestureState);
-            if (recognize(gestureState)) {
+            if (recognizeDrag(gestureState)) {
                 Alert.alert(
                     'Add Favorite',
-                    'Are you sure you wish to add ' + campsite.name + ' to favorite?',
+                    'Are you sure you wish to add ' + campsite.name + ' to favorites?',
                     [
                         {
                             text: 'Cancel',
-                            style: 'Cancel',
+                            style: 'cancel',
                             onPress: () => console.log('Cancel Pressed')
-                            
                         },
                         {
                             text: 'OK',
                             onPress: () => props.favorite ?
-                            console.log('Already set as a favorite') : props.markFavorite()
+                                console.log('Already set as a favorite') : props.markFavorite()
                         }
                     ],
-                    {cancelable: false}
-                )
+                    { cancelable: false }
+                );
             }
             return true;
         }
-    })
+    });
+
 
     if (campsite) {
         return (
@@ -62,7 +68,9 @@ function RenderCampsite(props) {
                 animation='fadeInDown' 
                 duration={2000} 
                 delay={1000}
-                {...PanResponder.panHandlers}
+                ref={view}
+                {...panResponder.panHandlers}
+                
                 >
                 <Card
                     featuredTitle={campsite.name}
@@ -81,6 +89,7 @@ function RenderCampsite(props) {
                             onPress={() => props.favorite ? console.log('Already faved') : props.markFavorite()}               
                         />  
                         <Icon
+                            style={styles.cardItem}
                             name='pencil'
                             type='font-awesome'
                             color='#5637DD'
@@ -261,6 +270,10 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         margin: 20
+    },
+    cardItem: {
+        flex: 1,
+        margin: 10
     },
     modal: {
         justifyContent: 'center',

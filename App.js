@@ -3,17 +3,21 @@ import React from 'react';
 import Main from './components/MainComponent';
 import {Provider} from 'react-redux';
 import {ConfigureStore} from './redux/configureStore';
+import { PersistGate } from 'redux-persist/es/integration/react';
+import Loading from './components/LoadingComponent';
 
 
-//creates configures and returns redux store
-const store = ConfigureStore();
+
+const { persistor, store } = ConfigureStore();
 
 export default function App() {
-  return (
-    // pass the store as a prop so MainComponent and its children can access the redux store
-    <Provider store={store}>
-      <Main />
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <PersistGate
+                loading={<Loading />}
+                persistor={persistor}>
+                <Main />
+            </PersistGate>
+        </Provider>
+    );
 }
-

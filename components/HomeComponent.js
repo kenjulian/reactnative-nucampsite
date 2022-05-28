@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, Text, ScrollView, Animated} from 'react-native';
+import {View, Text, Animated} from 'react-native';
 import {Card} from 'react-native-elements';
 // import {CAMPSITES} from '../shared/campsites';
 // import {PROMOTIONS} from '../shared/promotions';
@@ -49,6 +49,7 @@ function RenderItem(props) {
 class Home extends Component {
     //add constructor to stores animated value in the local component state
     constructor(props) {
+        super(props);
         this.state = {
             scaleValue: new Animated.Value(0)
         }
