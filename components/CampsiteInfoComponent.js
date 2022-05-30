@@ -29,6 +29,7 @@ function RenderCampsite(props) {
     const view = React.createRef();
 
     const recognizeDrag = ({dx}) => (dx < -200) ? true : false;
+    const recognizeComment = ({dx}) => (dx > 200) ? true : false;
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponder: () => true,
@@ -56,6 +57,8 @@ function RenderCampsite(props) {
                     ],
                     { cancelable: false }
                 );
+            } else if (recognizeComment(gestureState)) {
+                props.onShowModal();
             }
             return true;
         }
@@ -194,70 +197,70 @@ class CampsiteInfo extends Component {
                     onShowModal={() => this.toggleModal()}
                 />
                 <RenderComments comments={comments} />
-            <Modal
+                <Modal
                 animationType={'slide'}
                 transparent={false}
                 visible={this.state.showModal}
                 onRequestClose={() => this.toggleModal()}
-            >
-                <View style={styles.modal}>
-                    <Rating
-                        showRating
-                        startingValue={this.state.rating}
-                        imageSize={40}
-                        onFinishRating={rating => this.setState({rating: rating})}
-                        style={{paddingVertical: 10}}
-                    />
-                    <Input
-                        placeholder='author'
-                        leftIcon={{ type: 'font-awesome', name: 'user-o' }}
-                        leftIconContainerStyle={{paddingRight: 10}}
-                        onChangeText={author => this.setState({author: author})}
-                        value={this.state.author}
-                    >
-                    </Input>
-                    <Input
-                        placeholder='comment'
-                        leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
-                        leftIconContainerStyle={{paddingRight: 10}}
-                        onChangeText={text => this.setState({text: text})}
-                        value={this.state.text}
-                    >
-                    </Input>
-                    <View>
-                        <Button
-                            title='Submit'
-                            color='#5637DD'
-                            onPress={() => {
-                                this.handleComment(campsiteId);
-                                this.resetForm();
-                            }
-                            }
+                >
+                    <View style={styles.modal}>
+                        <Rating
+                            showRating
+                            startingValue={this.state.rating}
+                            imageSize={40}
+                            onFinishRating={rating => this.setState({rating: rating})}
+                            style={{paddingVertical: 10}}
+                        />
+                        <Input
+                            placeholder='author'
+                            leftIcon={{ type: 'font-awesome', name: 'user-o' }}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={author => this.setState({author: author})}
+                            value={this.state.author}
                         >
+                        </Input>
+                        <Input
+                            placeholder='comment'
+                            leftIcon={{ type: 'font-awesome', name: 'comment-o' }}
+                            leftIconContainerStyle={{paddingRight: 10}}
+                            onChangeText={text => this.setState({text: text})}
+                            value={this.state.text}
+                        >
+                        </Input>
+                        <View>
+                            <Button
+                                title='Submit'
+                                color='#5637DD'
+                                onPress={() => {
+                                    this.handleComment(campsiteId);
+                                    this.resetForm();
+                                }
+                                }
+                            >
 
-                        </Button>
+                            </Button>
 
-                    
+                        
+                        </View>
+
+
+                        
+                        <View style={{margin: 10}}>
+                            <Button
+                                onPress={() => {
+                                    this.toggleModal();
+                                    this.resetForm();
+                                }}
+                                color='#808080'
+                                title='Cancel'
+                            >
+
+                            </Button>
+                        </View>
                     </View>
 
 
-                    
-                    <View style={{margin: 10}}>
-                        <Button
-                            onPress={() => {
-                                this.toggleModal();
-                                this.resetForm();
-                            }}
-                            color='#808080'
-                            title='Cancel'
-                        >
-
-                        </Button>
-                    </View>
-                </View>
-
-
-            </Modal>
+                </Modal>
             </ScrollView>
         )
     }
